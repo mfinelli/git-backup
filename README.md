@@ -57,3 +57,15 @@ you can restore them to a new remote like so:
 ```shell
 $ git push --mirror "$NEW_REMOTE"
 ```
+
+### Crontab
+
+You might also find it helpful to run the backup as a cron job. Below is an
+example that runs the backup everyday at 0230, but this could obviously adjust
+it to suit your needs. I also have my s3 bucket set to delete backups older
+than three months. Assuming you have the script deployed to your home
+directory:
+
+```
+30 2 * * * cd /home/user/git-backup && /home/user/git-backup/gitbackup
+```
