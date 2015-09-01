@@ -2,3 +2,15 @@
 
 # Get the local configuration.
 source ~/.gitbackup
+
+# Make sure that the correct variables are set!
+# http://stackoverflow.com/a/13864829
+if [ -z ${PASSPHRASE+x} ]; then
+    echo "You must configure an encryption password!"
+    exit 1
+fi
+
+if [[ ${#REPOS[@]} -lt 1 ]]; then
+    echo "You must specify at least one repository to backup!"
+    exit 1
+fi
