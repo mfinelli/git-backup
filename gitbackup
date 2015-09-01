@@ -58,12 +58,16 @@ for project_dir in */; do
     cfv -C -rr -t sha1
 
     cd ../
-    tar -czvf "${repo_dir%/}.tgz" "$repo_dir"
+    tar -czvf "${project_dir%/}.tgz" "$project_dir"
+
+    rm -rf "$project_dir"
 done
 
 for repo_tar in *.tgz; do
     gpg --cipher-algo AES256 --symmetric --yes --batch \
         --passphrase="$PASSPHRASE" "$repo_tar"
+
+    rm "$repo_tar"
 done
 
 for gpg_ar in *.tgz.gpg; do
@@ -78,4 +82,6 @@ for gpg_ar in *.tgz.gpg; do
         --server-side-encryption \
         "$gpg_ar" \
         s3://"$BUCKET"/"$saveas"
+
+    rm "$gpg_ar"
 done
