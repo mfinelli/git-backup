@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Get the local configuration.
+source ~/.gitbackup
