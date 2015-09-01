@@ -45,3 +45,15 @@ BUCKET="your-backup-bucket"
 **N.B.** That at the moment this only supports repositories in the
 `git@git:group/repository.git` format since it stores repositories by user or
 project.
+
+## Usage
+
+Running a backup is easy! After configuring everything just run the
+`gitbackup` script!
+
+Note that repositories are cloned using the `--mirror` option. This means that
+you can restore them to a new remote like so:
+
+```shell
+$ git push --mirror "$NEW_REMOTE"
+```
