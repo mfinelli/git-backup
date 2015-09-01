@@ -4,9 +4,21 @@ Backup git repositories to S3.
 
 ## Dependencies
 
+### cfv
+
 Checksums (SHA1) of every file are generated before tar'ing and encrypting
 the repositories using `cfv`. You should install it using your favorite
 package manager before trying to run a backup.
+
+### s3cmd
+
+[s3cmd](https://github.com/s3tools/s3cmd) is used to actuall upload the
+backups to AWS, so you will need to install and configure it first. Just like
+above, install with your package manager and then configure the tool with:
+
+```shell
+$ s3cmd --configure
+```
 
 ## Configuration
 
