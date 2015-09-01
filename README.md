@@ -2,6 +2,12 @@
 
 Backup git repositories to S3.
 
+## Dependencies
+
+Checksums (SHA1) of every file are generated before tar'ing and encrypting
+the repositories using `cfv`. You should install it using your favorite
+package manager before trying to run a backup.
+
 ## Configuration
 
 Configuration for the gitbackup is saved in your home directory in the
