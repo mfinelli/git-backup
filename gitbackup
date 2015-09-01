@@ -15,6 +15,11 @@ if [[ ${#REPOS[@]} -lt 1 ]]; then
     exit 1
 fi
 
+if [[ -z "$BUCKET" ]]; then
+    echo "You must specify an s3 bucket for uploading!"
+    exit 1
+fi
+
 # Make sure that cfv is installed.
 command -v cfv >/dev/null 2>&1 || { \
     echo >&2 "Cfv is not installed. Aborting!"; exit 1; \
@@ -48,7 +53,6 @@ done
 
 for project_dir in */; do
     cd "$project_dir"
-
 
     # http://serverfault.com/a/303400
     cfv -C -rr -t sha1
