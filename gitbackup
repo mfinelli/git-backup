@@ -52,6 +52,14 @@ if [ ! -f ~/.s3cfg ]; then
     exit 1
 fi
 
+WORKDIR=$(mktemp -d) || { \
+    echo >&2 "Could not create temporary directory."; exit 1; \
+}
+
+cd /tmp
+# ls | grep "$(basename "$WORKDIR")"
+cd "$WORKDIR"
+
 for repo_url in "${REPOS[@]}"; do
     filename=$(basename $repo_url)
     repo="${filename%.*}"
@@ -101,3 +109,6 @@ for gpg_ar in *.tgz.gpg; do
 
     rm "$gpg_ar"
 done
+
+cd ../
+rmdir "$WORKDIR"
