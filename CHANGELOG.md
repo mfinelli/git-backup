@@ -3,7 +3,7 @@
 This file details the releases of the `gitbackup` program. It does _not_
 follow semantic versioning.
 
-## unreleased
+## v2.1 (2017-02-14)
 
 Fix typo
 
