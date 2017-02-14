@@ -102,7 +102,7 @@ for repo_tar in *.tgz; do
         $cmd
     else
         gpg --cipher-algo AES256 --symmetric --yes --batch \
-            --passphrase="$PASSPHRADE" "$repo_tar"
+            --passphrase="$PASSPHRASE" "$repo_tar"
     fi
 
     rm "$repo_tar"
