@@ -3,9 +3,13 @@
 This file details the releases of the `gitbackup` program. It does _not_
 follow semantic versioning.
 
+## unreleased
+
+Use s3cmd no preserve.
+
 ## v2.1 (2017-02-14)
 
-Fix typo
+Fix typo.
 
 ## v2.0 (2017-02-13_)
 

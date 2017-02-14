@@ -118,6 +118,7 @@ for gpg_ar in *.tgz.gpg; do
         --acl-private \
         --guess-mime-type \
         --server-side-encryption \
+        --no-preserve \
         "$gpg_ar" \
         s3://"$BUCKET"/"$saveas"
 
