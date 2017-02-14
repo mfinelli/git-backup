@@ -26,9 +26,29 @@ Configuration for the gitbackup is saved in your home directory in the
 `.gitbackup` file. It is basically just another bash script that defines the
 variables that we need which we source before running the backup.
 
-The three variables that you need to set are for the password to encrypt the
-repositories with, a list of repositories to backup, and the name of the
-bucket into which the backup will be saved:
+You can encrypy using either a standard PGP recipient or using a password.
+You'll also need to provide the list of repositories to backup and the name
+of the bucket into which the backup will be saved.
+
+**N.B.** That at the moment this only supports repositories in the
+`git@git:group/repository.git` format since it stores repositories by user or
+project.
+
+### Recipient Encryption
+
+```shell
+# List of recipients can be email addresses or key ids.
+RECIPIENTS=('you@example.com')
+
+# List of repositories to backup:
+REPOS=('git@github.com:mfinelli/git-backup.git'
+       'git@github.com:mfinelli/git-backup.wiki.git')
+
+# You can list your buckets with `s3cmd ls`
+BUCKET="your-backup-bucket"
+```
+
+### Password Encryption
 
 ```shell
 # Choose a long, strong passphrase to encrypt the repositories with.
@@ -41,10 +61,6 @@ REPOS=('git@github.com:mfinelli/git-backup.git'
 # You can list your buckets with `s3cmd ls`
 BUCKET="your-backup-bucket"
 ```
-
-**N.B.** That at the moment this only supports repositories in the
-`git@git:group/repository.git` format since it stores repositories by user or
-project.
 
 ## Usage
 
