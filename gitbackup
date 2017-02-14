@@ -19,11 +19,15 @@
 # Get the local configuration.
 source ~/.gitbackup
 
-# Make sure that the correct variables are set!
-# http://stackoverflow.com/a/13864829
-if [ -z ${PASSPHRASE+x} ]; then
-    echo >&2 "You must configure an encryption password!"
-    exit 1
+if [[ -z ${RECIPIENTS} || ${#RECIPIENTS[@]} -lt 1 ]]; then
+    if [[ -z ${PASSPHRASE+x} ]]; then
+        echo >&2 "You must configure recipients or an encryption password!"
+        exit 1
+    else
+        ENC_MODE=2
+    fi
+else
+    ENC_MODE=1
 fi
 
 if [[ ${#REPOS[@]} -lt 1 ]]; then
@@ -56,8 +60,6 @@ WORKDIR=$(mktemp -d) || { \
     echo >&2 "Could not create temporary directory."; exit 1; \
 }
 
-cd /tmp
-# ls | grep "$(basename "$WORKDIR")"
 cd "$WORKDIR"
 
 for repo_url in "${REPOS[@]}"; do
@@ -88,8 +90,20 @@ for project_dir in */; do
 done
 
 for repo_tar in *.tgz; do
-    gpg --cipher-algo AES256 --symmetric --yes --batch \
-        --passphrase="$PASSPHRASE" "$repo_tar"
+    if [[ $ENC_MODE -eq 1 ]]; then
+        # build up the gpg command with all of the recipients
+        cmd='gpg --always-trust -e'
+        for rec in "${RECIPIENTS[@]}"; do
+            cmd="$cmd -r $rec"
+        done
+        cmd="$cmd $repo_tar"
+
+        echo "$cmd"
+        $cmd
+    else
+        gpg --cipher-algo AES256 --symmetric --yes --batch \
+            --passphrase="$PASSPHRADE" "$repo_tar"
+    fi
 
     rm "$repo_tar"
 done
