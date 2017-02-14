@@ -19,11 +19,15 @@
 # Get the local configuration.
 source ~/.gitbackup
 
-# Make sure that the correct variables are set!
-# http://stackoverflow.com/a/13864829
-if [ -z ${PASSPHRASE+x} ]; then
-    echo >&2 "You must configure an encryption password!"
-    exit 1
+if [[ -z ${RECIPIENTS} || ${#RECIPIENTS[@]} -lt 1 ]]; then
+    if [[ -z ${PASSPHRASE+x} ]]; then
+        echo >&2 "You must configure recipients or an encryption password!"
+        exit 1
+    else
+        ENC_MODE=2
+    fi
+else
+    ENC_MODE=1
 fi
 
 if [[ ${#REPOS[@]} -lt 1 ]]; then
