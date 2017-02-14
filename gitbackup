@@ -90,8 +90,20 @@ for project_dir in */; do
 done
 
 for repo_tar in *.tgz; do
-    gpg --cipher-algo AES256 --symmetric --yes --batch \
-        --passphrase="$PASSPHRASE" "$repo_tar"
+    if [[ $ENC_MODE -eq 1 ]]; then
+        # build up the gpg command with all of the recipients
+        cmd='gpg --always-trust -e'
+        for rec in "${RECIPIENTS[@]}"; do
+            cmd="$cmd -r $rec"
+        done
+        cmd="$cmd $repo_tar"
+
+        echo "$cmd"
+        $cmd
+    else
+        gpg --cipher-algo AES256 --symmetric --yes --batch \
+            --passphrase="$PASSPHRADE" "$repo_tar"
+    fi
 
     rm "$repo_tar"
 done
