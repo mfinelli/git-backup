@@ -60,8 +60,6 @@ WORKDIR=$(mktemp -d) || { \
     echo >&2 "Could not create temporary directory."; exit 1; \
 }
 
-cd /tmp
-# ls | grep "$(basename "$WORKDIR")"
 cd "$WORKDIR"
 
 for repo_url in "${REPOS[@]}"; do
