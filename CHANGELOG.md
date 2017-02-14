@@ -11,7 +11,7 @@ Use s3cmd no preserve.
 
 Fix typo.
 
-## v2.0 (2017-02-13_)
+## v2.0 (2017-02-13)
 
 Add support for gpg recipients as encryption targets.
 
