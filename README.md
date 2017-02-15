@@ -26,15 +26,17 @@ Configuration for the gitbackup is saved in your home directory in the
 `.gitbackup` file. It is basically just another bash script that defines the
 variables that we need which we source before running the backup.
 
-You can encrypy using either a standard PGP recipient or using a password.
-You'll also need to provide the list of repositories to backup and the name
-of the bucket into which the backup will be saved.
+You can encrypy using either a standard PGP recipient (public key encryption)
+or by using a password. You'll also need to provide the list of repositories
+to backup and the name of the bucket into which the backup will be saved.
 
 **N.B.** That at the moment this only supports repositories in the
 `git@git:group/repository.git` format since it stores repositories by user or
 project.
 
-### Recipient Encryption
+If you prefer armored output set `ARMOR=true` in your configuration.
+
+### Public Key Encryption
 
 ```shell
 # List of recipients can be email addresses or key ids.
