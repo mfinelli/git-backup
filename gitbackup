@@ -40,6 +40,12 @@ if [[ -z "$BUCKET" ]]; then
     exit 1
 fi
 
+if [[ "$ARMOR" == "true" ]]; then
+    ARMOR_MODE=1
+else
+    ARMOR_MODE=0
+fi
+
 # Make sure that cfv is installed.
 command -v cfv >/dev/null 2>&1 || { \
     echo >&2 "Cfv is not installed. Aborting!"; exit 1; \
@@ -91,8 +97,13 @@ done
 
 for repo_tar in *.tgz; do
     if [[ $ENC_MODE -eq 1 ]]; then
+        if [[ $ARMOR_MODE -eq 1 ]]; then
+            cmd='gpg --always-trust -ae'
+        else
+            cmd='gpg --always-trust -e'
+        fi
+
         # build up the gpg command with all of the recipients
-        cmd='gpg --always-trust -e'
         for rec in "${RECIPIENTS[@]}"; do
             cmd="$cmd -r $rec"
         done
@@ -101,29 +112,53 @@ for repo_tar in *.tgz; do
         echo "$cmd"
         $cmd
     else
-        gpg --cipher-algo AES256 --symmetric --yes --batch \
-            --passphrase="$PASSPHRASE" "$repo_tar"
+        if [[ $ARMOR_MODE -eq 1 ]]; then
+            gpg --cipher-algo AES256 --symmetric --yes --batch --armor \
+                --passphrase="$PASSPHRASE" "$repo_tar"
+        else
+            gpg --cipher-algo AES256 --symmetric --yes --batch \
+                --passphrase="$PASSPHRASE" "$repo_tar"
+        fi
     fi
 
     rm "$repo_tar"
 done
 
-for gpg_ar in *.tgz.gpg; do
-    fn="${gpg_ar%.*}" # strip .gpg
-    fn="${fn%.*}" # strip .tgz
-    today=$(date +%Y%m%d)
-    saveas="${fn}-${today}.tgz.gpg"
+if [[ $ARMOR_MODE -eq 1 ]]; then
+    for gpg_ar in *.tgz.asc; do
+        fn="${gpg_ar%.*}" # strip .asc
+        fn="${fn%.*}" # strip .tgz
+        today=$(date +%Y%m%d)
+        saveas="${fn}-${today}.tgz.asc"
 
-    s3cmd put \
-        --acl-private \
-        --guess-mime-type \
-        --server-side-encryption \
-        --no-preserve \
-        "$gpg_ar" \
-        s3://"$BUCKET"/"$saveas"
+        s3cmd put \
+            --acl-private \
+            --guess-mime-type \
+            --server-side-encryption \
+            --no-preserve \
+            "$gpg_ar" \
+            s3://"$BUCKET"/"$saveas"
 
-    rm "$gpg_ar"
-done
+        rm "$gpg_ar"
+    done
+else
+    for gpg_ar in *.tgz.gpg; do
+        fn="${gpg_ar%.*}" # strip .gpg
+        fn="${fn%.*}" # strip .tgz
+        today=$(date +%Y%m%d)
+        saveas="${fn}-${today}.tgz.gpg"
+
+        s3cmd put \
+            --acl-private \
+            --guess-mime-type \
+            --server-side-encryption \
+            --no-preserve \
+            "$gpg_ar" \
+            s3://"$BUCKET"/"$saveas"
+
+        rm "$gpg_ar"
+    done
+fi
 
 cd ../
 rmdir "$WORKDIR"

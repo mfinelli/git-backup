@@ -5,7 +5,8 @@ follow semantic versioning.
 
 ## unreleased
 
-Use s3cmd no preserve.
+* Use s3cmd no preserve.
+* Add option for armored output.
 
 ## v2.1 (2017-02-14)
 
