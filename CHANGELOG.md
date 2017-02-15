@@ -3,7 +3,7 @@
 This file details the releases of the `gitbackup` program. It does _not_
 follow semantic versioning.
 
-## unreleased
+## v3.0 (2017-02-14)
 
 * Use s3cmd no preserve.
 * Add option for armored output.
